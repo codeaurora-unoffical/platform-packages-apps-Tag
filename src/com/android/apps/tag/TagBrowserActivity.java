@@ -60,6 +60,11 @@ public class TagBrowserActivity extends TabActivity implements DialogInterface.O
                 .setContent(new Intent().setClass(this, TagList.class)
                         .putExtra(TagList.EXTRA_SHOW_STARRED_ONLY, true)));
 
+        tabHost.addTab(tabHost.newTabSpec("mytag")
+                .setIndicator(getText(R.string.tab_my_tag),
+                        res.getDrawable(R.drawable.ic_tab_my_tag))
+                .setContent(new Intent().setClass(this, MyTagList.class)));
+
         SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
         if (!preferences.getBoolean(PREF_KEY_SHOW_INTRO, false)) {
             preferences.edit().putBoolean(PREF_KEY_SHOW_INTRO, true).apply();
@@ -81,7 +86,7 @@ public class TagBrowserActivity extends TabActivity implements DialogInterface.O
     public void onResume() {
         super.onResume();
         // Check to see if NFC is on
-        NfcAdapter nfc = NfcAdapter.getDefaultAdapter();
+        NfcAdapter nfc = NfcAdapter.getDefaultAdapter(this);
         if (nfc == null || !nfc.isEnabled()) {
             showDialog(DIALOG_NFC_OFF);
         }

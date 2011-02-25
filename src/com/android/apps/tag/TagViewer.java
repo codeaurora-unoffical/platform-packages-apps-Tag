@@ -24,9 +24,12 @@ import com.android.apps.tag.record.ParsedNdefRecord;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -35,6 +38,9 @@ import android.nfc.FormatException;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
+import android.nfc.tech.NdefFormatable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -53,6 +59,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -155,7 +162,8 @@ public class TagViewer extends Activity implements OnClickListener {
     void resolveIntent(Intent intent) {
         // Parse the intent
         String action = intent.getAction();
-        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)) {
+        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)
+                || NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
             if (SHOW_OVER_LOCK_SCREEN) {
                 // A tag was just scanned so poke the user activity wake lock to keep
                 // the screen on a bit longer in the event that the activity has
@@ -203,15 +211,31 @@ public class TagViewer extends Activity implements OnClickListener {
             mStar.setEnabled(true);
 
             // Play notification.
-            MediaPlayer player = MediaPlayer.create(this, R.raw.discovered_tag_notification);
-            player.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
-            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    mp.release();
+            try {
+                AssetFileDescriptor afd = getResources().openRawResourceFd(
+                        R.raw.discovered_tag_notification);
+                if (afd != null) {
+                    MediaPlayer player = new MediaPlayer();
+                    player.setDataSource(
+                            afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+                    afd.close();
+                    player.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
+                    player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            mp.release();
+                        }
+                    });
+                    player.prepare();
+                    player.start();
                 }
-            });
-            player.start();
+            } catch (IOException ex) {
+                Log.d(TAG, "Unable to play sound for tag discovery", ex);
+            } catch (IllegalArgumentException ex) {
+                Log.d(TAG, "Unable to play sound for tag discovery", ex);
+            } catch (SecurityException ex) {
+                Log.d(TAG, "Unable to play sound for tag discovery", ex);
+            }
 
         } else if (Intent.ACTION_VIEW.equals(action)) {
             // Setup the views
