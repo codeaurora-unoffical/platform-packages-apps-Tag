@@ -29,7 +29,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class TagDBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "tags.db";
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 16;
 
     public static final String TABLE_NAME_NDEF_MESSAGES = "ndef_msgs";
 
@@ -50,14 +50,35 @@ public class TagDBHelper extends SQLiteOpenHelper {
                 NdefMessages.DATE + " INTEGER NOT NULL, " +
                 NdefMessages.TITLE + " TEXT NOT NULL DEFAULT ''," +
                 NdefMessages.BYTES + " BLOB NOT NULL, " +
-                NdefMessages.STARRED + " INTEGER NOT NULL DEFAULT 0" +  // boolean
+                NdefMessages.STARRED + " INTEGER NOT NULL DEFAULT 0," +  // boolean
+                NdefMessages.IS_MY_TAG + " INTEGER NOT NULL DEFAULT 0" + // boolean
                 ");");
+    }
+
+    /**
+     * Drop data and recreate everything.
+     */
+    private void recreate(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_NDEF_MESSAGES);
+        onCreate(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop everything and recreate it for now
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_NDEF_MESSAGES);
-        onCreate(db);
+        if (oldVersion < 14) {
+            // Pre-release version.
+            recreate(db);
+            db.setVersion(newVersion);
+        } else if (oldVersion == 14) {
+            // GB release - does not have My tags yet.
+            db.execSQL("ALTER TABLE " + TABLE_NAME_NDEF_MESSAGES + " ADD COLUMN "
+                    + NdefMessages.IS_MY_TAG + " INTEGER NOT NULL DEFAULT 0");
+            db.setVersion(newVersion);
+        } else if (oldVersion < DATABASE_VERSION) {
+            // Unreleased version with improperly formatted tags.
+            db.execSQL("DELETE FROM " + TABLE_NAME_NDEF_MESSAGES + " WHERE "
+                    + NdefMessages.IS_MY_TAG + "=1");
+            db.setVersion(newVersion);
+        }
     }
 }

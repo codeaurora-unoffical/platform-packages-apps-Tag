@@ -26,8 +26,8 @@ import com.android.vcard.VCardParser_V21;
 import com.android.vcard.VCardParser_V30;
 import com.android.vcard.exception.VCardException;
 import com.android.vcard.exception.VCardVersionException;
+import com.google.android.collect.Lists;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -144,8 +144,8 @@ public class VCardRecord extends ParsedNdefRecord implements OnClickListener {
     }
 
     private static Intent getPickContactIntent() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(ContactsContract.Contacts.CONTENT_ITEM_TYPE);
         return intent;
     }
 
@@ -264,7 +264,7 @@ public class VCardRecord extends ParsedNdefRecord implements OnClickListener {
         }
 
         protected VCardRecordEditInfo(Parcel parcel) {
-            super(RECORD_TYPE);
+            super(parcel);
             mLookupUri = parcel.readParcelable(null);
             int valueLength = parcel.readInt();
             if (valueLength > 0) {

@@ -46,6 +46,12 @@
     <!-- Button label indicating that the user wants to delete a tag -->
     <string name="button_done">Done</string>
 
+    <!-- Button label indicating that the user wants to save a tag -->
+    <string name="button_save">Save</string>
+
+    <!-- Button label indicating that the user wants to cancel editing a tag -->
+    <string name="button_cancel">Cancel</string>
+
     <!-- String describing that if the user doesn't want to save a tag they should touch the button labeled Cancel. The text for the cancel button comes from the system string button_done. -->
     <string name="cancel_help_text">To skip adding this tag to your collection, touch Done</string>
 
@@ -57,6 +63,9 @@
 
     <!-- Label for control which enables/disables the "my tag" feature. -->
     <string name="turn_on_my_tag">Share my tag</string>
+
+    <!-- Label for activity which edits a tag to share/write [CHAR LIMIT=60] -->
+    <string name="edit_tag">Edit tag</string>
 
     <!-- Description for the control which enables/disables the "my tag" feature. -->
     <string name="turn_on_my_tag_subtitle">Allow others to read my tag </string>
@@ -146,7 +155,7 @@
     <string name="intro_title">About Tags</string>
 
     <!-- Text blurb for describing the app in an introductory flow. [CHAR LIMIT=160] -->
-    <string name="intro_text_about">Tags is for organizing Near Field Communication (NFC) tags.</string>
+    <string name="intro_text_about">Tags is for organizing and sharing Near Field Communication (NFC) tags.</string>
 
     <!-- Text blurb for describing usage of the app in an introductory flow. [CHAR LIMIT=120]-->
     <string name="intro_text_usage">You scan a tag by turning on your phone and placing it right next to a tag.</string>
@@ -155,7 +164,7 @@
     <string name="intro_text_contents">NFC tags can contain text, URLs, pictures, and other kinds of information.</string>
 
     <!-- Text blurb for more information an introductory flow. [CHAR LIMIT=120]-->
-    <string name="intro_text_more">To scan tags, you must have NFC turned on (in Settings, under Wireless &amp;
+    <string name="intro_text_more">To scan or share tags, you must have NFC turned on (in Settings, under Wireless &amp;
 Networks).</string>
 
     <!-- Text blurb for more information an introductory flow. [CHAR LIMIT=120]-->
@@ -163,5 +172,35 @@ Networks).</string>
 
     <!-- Popup text for confirming the deletion of a tag -->
     <string name="tag_deleted">Tag deleted</string>
+
+    <!-- Anchor text for touch target for creating a new My tag. [CHAR LIMIT=50] -->
+    <string name="add_tag">Add new tag</string>
+
+    <!-- Anchor text for touch target for selecting a tag to share as My tag. [CHAR LIMIT=50] -->
+    <string name="choose_my_tag">Choose a tag to share</string>
+
+    <!-- Active tag header for My tag [CHAR LIMIT=50] -->
+    <string name="active_tag">Active tag</string>
+
+    <!-- Header for list of tags that can be set as My tag. [CHAR LIMIT=50] -->
+    <string name="manage_my_tags">Manage my tags</string>
+
+    <!-- Menu item indicating that the user wants to delete a tag. [CHAR LIMIT=50] -->
+    <string name="menu_delete">Delete tag</string>
+
+    <!-- Menu item indicating that the user wants to edit a tag. [CHAR LIMIT=50] -->
+    <string name="menu_edit">Edit tag</string>
+
+    <!-- Menu item indicating that the user wants to set a tag
+         as the active tag to share as the device's tag. [CHAR LIMIT=50] -->
+    <string name="menu_set_as_active">Set as active tag</string>
+
+    <!-- Error message displayed when attempting to enable sharing of a "My tag"
+         with no tag selected. [CHAR LIMIT=80] -->
+    <string name="no_tag_selected">You do not have a tag selected to share.</string>
+
+    <!-- Error message displayed when attempting to select an active tag when
+         none have been created. [CHAR LIMIT=80] -->
+    <string name="no_tags_created">You have no tags created.</string>
 
 </resources>
